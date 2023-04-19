@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Tag } from "../App";
 import styles from "../components/NoteList.module.css";
+import CustomModal from "./CustomModal";
 
 type SingleNoteProps = {
   tags: Tag[];
@@ -15,11 +16,19 @@ type SingleNoteProps = {
 type NoteListProps = {
   availableTags: Tag[];
   notes: SingleNoteProps[];
+  updateTag: (id: string, lable: string) => void;
+  deleteTag: (id: string) => void;
 };
 
-const NoteList = ({ availableTags, notes }: NoteListProps) => {
+const NoteList = ({
+  availableTags,
+  notes,
+  updateTag,
+  deleteTag,
+}: NoteListProps) => {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [title, setTitle] = useState("");
+  const [isModal, setIsModal] = useState(false);
 
   const filterdNotes = useMemo(() => {
     return notes.filter((note) => {
@@ -45,7 +54,12 @@ const NoteList = ({ availableTags, notes }: NoteListProps) => {
             <Link to="/new">
               <Button variant="primary">Create</Button>
             </Link>
-            <Button variant="outline-secondary">Edit Tags</Button>
+            <Button
+              onClick={() => setIsModal(true)}
+              variant="outline-secondary"
+            >
+              Edit Tags
+            </Button>
           </Stack>
         </Col>
       </Row>
@@ -91,6 +105,13 @@ const NoteList = ({ availableTags, notes }: NoteListProps) => {
           </Col>
         ))}
       </Row>
+      <CustomModal
+        show={isModal}
+        handleClose={() => setIsModal(false)}
+        availableTags={availableTags}
+        updateTag={updateTag}
+        deleteTag={deleteTag}
+      />
     </>
   );
 };
@@ -109,10 +130,19 @@ const NoteCard = ({ id, title, tags }: SingleNoteProps) => {
         >
           <span className="fs-5"> {title} </span>
           {tags.length > 0 && (
-            <Stack gap={1} direction="horizontal" className="justify-content-center flex-wrap" >
-                {tags.map(tag =>{
-                    return <Badge key={tag.id} className="text-truncates"> {tag.label} </Badge>
-                })}
+            <Stack
+              gap={1}
+              direction="horizontal"
+              className="justify-content-center flex-wrap"
+            >
+              {tags.map((tag) => {
+                return (
+                  <Badge key={tag.id} className="text-truncates">
+                    {" "}
+                    {tag.label}{" "}
+                  </Badge>
+                );
+              })}
             </Stack>
           )}
         </Stack>

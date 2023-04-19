@@ -9,9 +9,14 @@ type NewNotepProps = {
 
 const NewNotes = ({ onSubmit, onAddTag, availableTags }: NewNotepProps) => {
   return (
-    <div className="mb-4">
-      <NoteForm onSubmit={onSubmit} onAddTag={onAddTag} availableTags={availableTags} />
-    </div>
+    <>
+      <h1 className="mb-4">Add Note</h1>
+      <NoteForm
+        onSubmit={onSubmit}
+        onAddTag={onAddTag}
+        availableTags={availableTags}
+      />
+    </>
   );
 };
 
